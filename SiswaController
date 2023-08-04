@@ -1,0 +1,111 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\sekolahdiann;
+use Illuminate\Http\Request;
+
+class SekolahdiannController extends Controller
+{
+    /**
+    * Display a listing of the resource.
+    *
+    * @return \Illuminate\Http\Response
+    */
+    public function index()
+    {
+        $sekolahdianns = Sekolahdiann::orderBy('id','desc')->paginate(5);
+        return view('sekolahdiann/index', compact('sekolahdianns'));
+    }
+
+    /**
+    * Show the form for creating a new resource.
+    *
+    * @return \Illuminate\Http\Response
+    */
+    public function create()
+    {
+        return view('sekolahdiann.create');
+    }
+    public function home()
+    {
+        return view('home');
+    }
+
+    /**
+    * Store a newly created resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'address' => 'required',
+            'jurusan' => 'required',
+            'class' => 'required',
+
+        ]);
+        
+        Sekolahdiann::create($request->post());
+
+        return redirect()->route('sekolahdianns.index')->with('success','Sekolahdiann has been created successfully.');
+    }
+
+    /**
+    * Display the specified resource.
+    *
+    * @param  \App\sekolahdiann  $sekolahdiann
+    * @return \Illuminate\Http\Response
+    */
+    public function show(Sekolahdiann $sekolahdiann)
+    {
+        return view('sekolahdianns.show',compact('sekolahdiann'));
+    }
+
+    /**
+    * Show the form for editing the specified resource.
+    *
+    * @param  \App\Sekolahdiann $sekolahdiann
+    * @return \Illuminate\Http\Response
+    */
+    public function edit(Sekolahdiann $sekolahdiann)
+    {
+        return view('sekolahdianns.edit',compact('sekolahdiann'));
+    }
+
+    /**
+    * Update the specified resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @param  \App\sekolahdiann  $sekolahdiann
+    * @return \Illuminate\Http\Response
+    */
+    public function update(Request $request, Sekolahdiann $sekolahdiann)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'address' => 'required',
+            'jurusan' => 'required',
+            'class' => 'required',
+        ]);
+        
+        $sekolahdiann->fill($request->post())->save();
+
+        return redirect()->route('sekolahdianns.index')->with('success','sekolahdiann Has Been updated successfully');
+    }
+
+    /**
+    * Remove the specified resource from storage.
+    *
+    * @param  \App\Sekolahdiann  $sekolahdiann
+    * @return \Illuminate\Http\Response
+    */
+    public function destroy(sekolahdiann $sekolahdiann)
+    {
+        $sekolahdiann->delete();
+        return redirect()->route('sekolahdianns.index')->with('success','Sekolahdiann has been deleted successfully');
+    }
+}
